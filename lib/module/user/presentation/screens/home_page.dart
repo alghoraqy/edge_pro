@@ -20,7 +20,8 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     sl<NetworkChecker>().hasConnection.listen((networkConnection) {
       if (networkConnection == InternetConnectionStatus.connected) {
-        if (UserBloc.of(AppRouter.currentContext).currentUser != null) {
+        if (UserBloc.of(AppRouter.currentContext).currentUser != null && UserBloc.of(AppRouter.currentContext).isApiCalled ==false) {
+          UserBloc.of(AppRouter.currentContext).isApiCalled =true;
           UserBloc.of(AppRouter.currentContext).add(CallApiEvent());
         }
         debugPrint('Connected');

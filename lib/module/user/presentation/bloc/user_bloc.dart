@@ -1,7 +1,10 @@
+import 'package:edge_pro/core/app_router/app_router.dart';
+import 'package:edge_pro/core/constants/app_colors.dart';
 import 'package:edge_pro/module/user/data/models/user.dart';
 import 'package:edge_pro/module/user/data/repository/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 part 'user_event.dart';
 part 'user_state.dart';
@@ -10,6 +13,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   final UserRepository userRepository;
 
   User? currentUser;
+
+  bool isApiCalled =false;
 
   TextEditingController firstNameController = TextEditingController();
 
@@ -59,6 +64,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   _removeCachedUserHandler(RemoveCachedUserEvent event, Emitter<UserState> emit) async {
     await userRepository.removeCachedUser();
     currentUser = null;
+    emit(SuccessRemoveCachesUserState());
   }
 
   _callApiHander(CallApiEvent event, Emitter<UserState> emit) async {
@@ -67,7 +73,20 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       debugPrint('Success Call Api');
       debugPrint('User Name: ${currentUser!.firstName} ${currentUser!.middleName} ${currentUser!.lastName}  ${currentUser!.address}');
     });
-    add(RemoveCachedUserEvent());
+    isApiCalled = false;
+     add(RemoveCachedUserEvent());
+      ScaffoldMessenger.of(AppRouter.currentContext!).showSnackBar(
+      SnackBar(
+        duration:  const Duration(seconds:4),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        content: Text('user: ${currentUser!.firstName} ${currentUser!.middleName} ${currentUser!.lastName}  ${currentUser!.address}',style: TextStyle(
+          color: AppColors.white,
+          fontSize: 20.sp,
+          fontWeight: FontWeight.bold
+        ),),
+        backgroundColor: AppColors.success,
+      ),
+    );
     emit(SuccessCallApiState());
   }
 

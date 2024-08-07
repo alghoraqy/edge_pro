@@ -23,3 +23,6 @@ class ClearControllersState extends UserState{}
 class LoadingCallApiState extends UserState{}
 class FailedCallApiState extends UserState{}
 class SuccessCallApiState extends UserState{}
+
+
+class SuccessRemoveCachesUserState extends UserState{}
